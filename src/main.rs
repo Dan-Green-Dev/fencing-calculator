@@ -69,7 +69,7 @@ fn main() {
             calc_points(&fencers.clone());
         }
         if input == "catagory\n"{
-            change_catagory();
+            change_category();
         }
     }
 }
@@ -355,6 +355,6 @@ fn get_old_data(year: usize, mut fencers: Vec<Fencer>)->Vec<Fencer>{ // this is 
     return fencers.clone();
 }
 
-fn change_catagory(){
+fn change_category(){
     // take entries filename, catagory of comp
 }
