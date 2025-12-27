@@ -51,9 +51,9 @@ fn main() {
     // calc_points(&fencers);
 
     let pools = generate_pools(fencers.clone());
-
+    let help = "Welcome to my fencing stalking app!!! Use:\n    'pool' to print out the pools\n    'points' to calculate the NIF and points of each position\n    'position <int> to output the points reward for a specific position\n    'help' to print the help screen\n    'exit' to exit the program";
     // print_pools(pools.clone());
-    println!("Welcome to my fencing stalking app!!! Use:\n    'pool' to print out the pools\n    'points' to calculate the NIF and points of each position\n    'help' to print the help screen\n    'exit' to exit the program");
+    println!("{}",help);
     loop {
         print!(">");
         let _ = stdout().flush();
@@ -84,6 +84,9 @@ fn main() {
                     Err(error) => {println!("bad input");}
                 }
             }
+        }
+        if input == "help\n"{
+            println!("{}",help);
         }
     }
 }
