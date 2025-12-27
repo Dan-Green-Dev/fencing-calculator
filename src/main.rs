@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::{self, prelude::*, stdout};
-use std::usize;
+use std::{error, usize};
 use table_extract;
 #[derive(Debug,Clone)]
 struct Fencer{
@@ -70,6 +70,20 @@ fn main() {
         }
         if input == "catagory\n"{
             change_category();
+        }
+        if input == "position\n"{
+            println!("Usage: 'position <int>' where <int> is the finishing position you wish to evaluate ");
+        }
+        let mut white = input.split_whitespace();
+        if white.next().unwrap() == "position"{
+
+            if let Some(pos) = white.next(){
+                let res = pos.parse::<usize>();
+                match res{
+                    Ok(pos) => {calc_points_position(fencers.clone(),pos);},
+                    Err(error) => {println!("bad input");}
+                }
+            }
         }
     }
 }
@@ -243,7 +257,7 @@ fn generate_pools(fencers: Vec<Fencer>)-> Vec<Pool>{
     }
     pools
 }
-fn calc_points(fencers: &Vec<Fencer>){
+fn calc_points(fencers: &Vec<Fencer>)-> (f64,f64){
         let mut nif =0;
     let mut num:f64 = fencers.iter().count() as f64;
     println!("there are {} fencers", num);
@@ -287,6 +301,34 @@ fn calc_points(fencers: &Vec<Fencer>){
     }
     if num >128.0{
         println!("128th place will be awarded {} points",(nif*0.9).floor());
+    }
+    return (nif,num)
+}
+
+fn calc_points_position(fencers: Vec<Fencer>,pos: usize){
+    println!("called");
+    let (nif, num) = calc_points(&fencers);
+
+    let mut nif_file = File::open("src/nif.csv").unwrap();
+    let mut contents = String::new(); 
+    nif_file.read_to_string(&mut contents).unwrap();
+    let mut lines = contents.lines();
+    let mut res = 0.0;
+    if pos as f64 > (num * 0.83).floor(){
+        println!("Zero points will be awarded, outside of top 83%");
+    }
+    else{
+        for l in lines{
+            let mut white = l.split_whitespace();
+            if let Some(data) = white.next(){
+                if data.parse::<usize>().unwrap() == pos{
+                    res = white.next().unwrap().parse::<f64>().unwrap();
+                    println!("multiplier:{}",res);
+                    break;
+                }
+            }
+        }
+        println!("The points result for position {} is {:?}", pos, res * nif);
     }
 }
 
