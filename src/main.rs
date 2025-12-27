@@ -66,9 +66,11 @@ fn main() {
             print_pools(pools.clone(),&old_years);
         }
         if input == "points\n"{
-            calc_points(&fencers.clone());
+            let (nif,num) = calc_points(&fencers.clone());
+            print_points(nif,num);
+
         }
-        if input == "catagory\n"{
+        if input == "category\n"{
             change_category();
         }
         if input == "position\n"{
@@ -284,6 +286,9 @@ fn calc_points(fencers: &Vec<Fencer>)-> (f64,f64){
     println!("The NIF is {:?}",nif);
     let nif =nif as f64;
 
+    return (nif,num)
+}
+fn print_points(nif: f64,num: f64){
     if num>8.0{
         println!("1st place will be awarded {} points",(nif*20.0).floor());
     }
@@ -305,9 +310,7 @@ fn calc_points(fencers: &Vec<Fencer>)-> (f64,f64){
     if num >128.0{
         println!("128th place will be awarded {} points",(nif*0.9).floor());
     }
-    return (nif,num)
 }
-
 fn calc_points_position(fencers: Vec<Fencer>,pos: usize){
     println!("called");
     let (nif, num) = calc_points(&fencers);
