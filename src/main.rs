@@ -65,6 +65,9 @@ fn main() {
         if input == "pool\n"{
             print_pools(pools.clone(),&old_years);
         }
+        if input == "fencer\n"{
+            print_fencers(fencers.clone(), &old_years);
+        }
         if input == "points\n"{
             let (nif,num) = calc_points(&fencers.clone());
             print_points(nif,num);
@@ -203,30 +206,6 @@ fn update_fencer(f1: &mut Fencer, f2: &Fencer){
     f1.rank = f2.rank;
 }
 
-fn print_pools(pools: Vec<Pool>, old_years: &Vec<usize>){
-    
-    for p in pools{
-        println!("POOL {}",p.number+1);
-        for f in p.fencers{
-            let mut ppe =0;
-            if f.entries>0{
-                ppe = f.points/f.entries;
-            }
-            let mut output = format!("");
-            if f.international{
-                output = output + &format!("INTERNATIONAL FENCER");
-
-            }
-            output = output +& format!(" Name: {} Rank: {} Seed: {} Club: {}, Points per entry:{}",f.name, f.rank,f.seed, f.club,  ppe);
-            for y in old_years{
-                if let Some(out) =f.old_ranks.get(y){
-                    output = output + &format!(" Rank in {}: {}",y,out);
-                }
-            }
-            println!("{}",output);
-        }
-    }
-}
 
 fn generate_pools(fencers: Vec<Fencer>)-> Vec<Pool>{
     println!("Enter how big each pool will be:  ");
@@ -404,5 +383,34 @@ fn get_old_data(year: usize, mut fencers: Vec<Fencer>)->Vec<Fencer>{ // this is 
 }
 
 fn change_category(){
-    // take entries filename, catagory of comp
+    // take entries filename, category of comp
+}
+
+fn print_pools(pools: Vec<Pool>, old_years: &Vec<usize>){
+    
+    for p in pools{
+        println!("POOL {}",p.number+1);
+        print_fencers(p.fencers, old_years);
+    }
+}
+
+fn print_fencers(fencers: Vec<Fencer>, old_years: &Vec<usize>){
+    for f in fencers{
+            let mut ppe =0;
+            if f.entries>0{
+                ppe = f.points/f.entries;
+            }
+            let mut output = format!("");
+            if f.international{
+                output = output + &format!("INTERNATIONAL FENCER");
+
+            }
+            output = output +& format!(" Name: {} Rank: {} Seed: {} Club: {}, Points per entry:{}",f.name, f.rank,f.seed, f.club,  ppe);
+            for y in old_years{
+                if let Some(out) =f.old_ranks.get(y){
+                    output = output + &format!(" Rank in {}: {}",y,out);
+                }
+            }
+            println!("{}",output);
+    }
 }
